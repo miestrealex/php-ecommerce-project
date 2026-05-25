@@ -29,10 +29,19 @@ const search = document.getElementById("search");
 
 function updateOverlay(){
 
+    const sidebarActive =
+        sidebar && sidebar.classList.contains("active");
+
+    const loginActive =
+        loginDropdown && loginDropdown.classList.contains("active");
+
+    const userActive =
+        userDropdown && userDropdown.classList.contains("active");
+
     if(
-        sidebar.classList.contains("active") ||
-        loginDropdown.classList.contains("active") ||
-        userDropdown.classList.contains("active")
+        sidebarActive ||
+        loginActive ||
+        userActive
     ){
 
         overlay.classList.add("active");
@@ -271,7 +280,10 @@ cartIcon.onclick = function(event){
 
     // FECHAR OUTROS
     loginDropdown.classList.remove("active");
-    userDropdown.classList.remove("active");
+    if (userDropdown){
+        userDropdown.classList.remove("active");
+    }
+    
 
     // TOGGLE CARRINHO
     sidebar.classList.toggle("active");
@@ -288,7 +300,9 @@ if(userIcon){
 
         // FECHAR OUTROS
         sidebar.classList.remove("active");
-        userDropdown.classList.remove("active");
+        if(userDropdown){
+            userDropdown.classList.remove("active");
+        }
 
         // TOGGLE LOGIN
         loginDropdown.classList.toggle("active");
@@ -317,21 +331,38 @@ if(userMenu){
     }
 
 }
-
 /* =========================
    FECHAR AO CLICAR FORA
 ========================= */
 
 document.body.addEventListener("click", function(event){
 
-    // IGNORAR CLIQUES NOS BOTÕES E MENUS
+    // CARRINHO
     if(
         cartIcon.contains(event.target) ||
-        sidebar.contains(event.target) ||
-        userIcon.contains(event.target) ||
-        loginDropdown.contains(event.target) ||
-        userMenu.contains(event.target) ||
-        userDropdown.contains(event.target)
+        sidebar.contains(event.target)
+    ){
+        return;
+    }
+
+    // LOGIN
+    if(
+        userIcon &&
+        (
+            userIcon.contains(event.target) ||
+            loginDropdown.contains(event.target)
+        )
+    ){
+        return;
+    }
+
+    // USER MENU
+    if(
+        userMenu &&
+        (
+            userMenu.contains(event.target) ||
+            userDropdown.contains(event.target)
+        )
     ){
         return;
     }
@@ -341,8 +372,9 @@ document.body.addEventListener("click", function(event){
 
     loginDropdown.classList.remove("active");
 
-    userDropdown.classList.remove("active");
-
+    if(userDropdown){
+        userDropdown.classList.remove("active");
+    }
     updateOverlay();
 
 });
